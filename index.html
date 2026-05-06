@@ -1,0 +1,2469 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zin Min Htike — Senior Flutter Developer</title>
+  <meta name="description"
+    content="Senior Flutter Developer with 3+ years building scalable, offline-first, production-ready mobile applications. Specializing in Flutter, Dart, Firebase, and clean architecture.">
+  <meta name="keywords"
+    content="Flutter Developer, Dart, Firebase, Mobile App Development, Clean Architecture, Offline-First">
+  <meta name="author" content="Zin Min Htike">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      --bg-deep: oklch(8% 0.01 260);
+      --bg: oklch(12% 0.02 260);
+      --surface: oklch(16% 0.03 260);
+      --surface-elevated: oklch(20% 0.03 260);
+      --fg: oklch(96% 0.005 260);
+      --fg-muted: oklch(65% 0.02 260);
+      --border: oklch(25% 0.04 260);
+      --red: oklch(55% 0.22 25);
+      --red-glow: oklch(60% 0.25 25);
+      --blue: oklch(60% 0.20 250);
+      --blue-glow: oklch(65% 0.23 250);
+      --gradient-hero: linear-gradient(135deg, var(--red) 0%, var(--blue) 100%);
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== RESET ===== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--fg);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ===== LOADING SCREEN ===== */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--bg-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-web {
+      width: 120px;
+      height: 120px;
+      position: relative;
+    }
+
+    .loader-web::before,
+    .loader-web::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      border-radius: 50%;
+    }
+
+    .loader-web::before {
+      border-top-color: var(--red);
+      animation: loaderSpin 1s linear infinite;
+    }
+
+    .loader-web::after {
+      border-bottom-color: var(--blue);
+      animation: loaderSpin 1s linear infinite reverse;
+      inset: 10px;
+    }
+
+    .loader-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg);
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes loaderSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ===== CANVAS BACKGROUNDS ===== */
+    #web-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    #cursor-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-deep);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-muted);
+    }
+
+    /* ===== SECTION DIVIDERS ===== */
+    .section-divider {
+      height: 1px;
+      position: relative;
+      margin: 0 auto;
+      max-width: 1200px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--blue), transparent);
+      opacity: 0.3;
+    }
+
+    .section-divider::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gradient-hero);
+      box-shadow: 0 0 12px var(--red-glow), 0 0 24px var(--blue-glow);
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 32px;
+      background: rgba(12, 12, 20, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+    }
+
+    .nav.scrolled {
+      padding: 12px 32px;
+      background: rgba(12, 12, 20, 0.95);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--fg-muted);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-hero);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--fg);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+    }
+
+    .nav-toggle span {
+      width: 24px;
+      height: 2px;
+      background: var(--fg);
+      transition: var(--transition);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-display);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--gradient-hero);
+      color: white;
+      box-shadow: 0 4px 20px rgba(220, 40, 40, 0.3), 0 4px 20px rgba(40, 100, 220, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(220, 40, 40, 0.4), 0 8px 30px rgba(40, 100, 220, 0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--fg);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--red);
+      color: var(--fg);
+      box-shadow: 0 0 20px rgba(220, 40, 40, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-ghost {
+      color: var(--fg-muted);
+      padding: 14px 20px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--fg);
+    }
+
+    /* ===== GLASS CARD ===== */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-lg);
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--fg-muted);
+      max-width: 640px;
+      line-height: 1.7;
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--blue);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px;
+      height: 2px;
+      background: var(--blue);
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--fg) 0%, var(--fg-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 600;
+      margin-bottom: 24px;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--fg-muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 500px;
+    }
+
+    /* City Skyline */
+    .city-skyline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .city-skyline svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Phone Mockup */
+    .phone-mockup {
+      position: relative;
+      z-index: 2;
+      width: 260px;
+      height: 520px;
+      animation: phoneFloat 6s ease-in-out infinite;
+    }
+
+    .phone-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, oklch(20% 0.04 260), oklch(12% 0.03 260));
+      border-radius: 36px;
+      border: 2px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(220, 40, 40, 0.1), 0 0 40px rgba(40, 100, 220, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: var(--bg-deep);
+      border-radius: 0 0 16px 16px;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 8px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, oklch(18% 0.05 260) 0%, oklch(10% 0.02 260) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .phone-screen-logo {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .phone-screen-sub {
+      font-size: 12px;
+      color: var(--fg-muted);
+      text-align: center;
+    }
+
+    .phone-screen-lines {
+      margin-top: 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .phone-screen-line {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .phone-screen-line:nth-child(1) {
+      width: 80%;
+    }
+
+    .phone-screen-line:nth-child(2) {
+      width: 60%;
+    }
+
+    .phone-screen-line:nth-child(3) {
+      width: 90%;
+    }
+
+    .phone-screen-line:nth-child(4) {
+      width: 45%;
+    }
+
+    /* Web Lines on Phone */
+    .web-line {
+      position: absolute;
+      z-index: 1;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--red), transparent);
+      opacity: 0.6;
+    }
+
+    .web-line-1 {
+      top: -80px;
+      left: 30%;
+      transform: rotate(-15deg);
+    }
+
+    .web-line-2 {
+      top: -60px;
+      right: 25%;
+      transform: rotate(10deg);
+      background: linear-gradient(to bottom, var(--blue), transparent);
+    }
+
+    .web-line-3 {
+      top: -70px;
+      left: 50%;
+      transform: rotate(-5deg);
+    }
+
+    /* Tech Badges */
+    .tech-badges {
+      position: absolute;
+      inset: -40px;
+      z-index: 3;
+    }
+
+    .tech-badge {
+      position: absolute;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-display);
+      color: var(--fg-muted);
+      animation: badgeFloat 4s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    .tech-badge:nth-child(1) {
+      top: 5%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .tech-badge:nth-child(2) {
+      top: 15%;
+      right: -15%;
+      animation-delay: 0.5s;
+    }
+
+    .tech-badge:nth-child(3) {
+      top: 40%;
+      left: -20%;
+      animation-delay: 1s;
+    }
+
+    .tech-badge:nth-child(4) {
+      top: 55%;
+      right: -18%;
+      animation-delay: 1.5s;
+    }
+
+    .tech-badge:nth-child(5) {
+      top: 70%;
+      left: -12%;
+      animation-delay: 2s;
+    }
+
+    .tech-badge:nth-child(6) {
+      top: 80%;
+      right: -10%;
+      animation-delay: 2.5s;
+    }
+
+    .tech-badge:nth-child(7) {
+      top: 25%;
+      left: -25%;
+      animation-delay: 0.8s;
+    }
+
+    .tech-badge:nth-child(8) {
+      top: 65%;
+      right: -22%;
+      animation-delay: 1.8s;
+    }
+
+    .tech-badge:nth-child(9) {
+      top: 90%;
+      left: 5%;
+      animation-delay: 3s;
+    }
+
+    .tech-badge:nth-child(10) {
+      top: 0%;
+      right: 5%;
+      animation-delay: 3.5s;
+    }
+
+    @keyframes phoneFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(1deg);
+      }
+    }
+
+    @keyframes badgeFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    /* Hero gradient orbs */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .hero-orb-red {
+      width: 400px;
+      height: 400px;
+      background: var(--red);
+      top: 10%;
+      right: 10%;
+    }
+
+    .hero-orb-blue {
+      width: 350px;
+      height: 350px;
+      background: var(--blue);
+      bottom: 20%;
+      left: 5%;
+    }
+
+    /* ===== ABOUT ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+
+    .about-text {
+      font-size: 16px;
+      color: var(--fg-muted);
+      line-height: 1.8;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 24px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--red);
+      box-shadow: 0 0 20px rgba(220, 40, 40, 0.1);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      width: 20px;
+      height: 20px;
+      border-top: 2px solid var(--red);
+      border-right: 2px solid var(--blue);
+      border-radius: 0 var(--radius-lg) 0 0;
+      opacity: 0.5;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+
+    /* ===== SKILLS ===== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .skill-cluster {
+      padding: 32px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .skill-cluster:hover {
+      border-color: rgba(220, 40, 40, 0.3);
+      box-shadow: 0 0 30px rgba(220, 40, 40, 0.08);
+    }
+
+    .skill-cluster-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .skill-cluster-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--gradient-hero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .skill-nodes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-node {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--fg-muted);
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .skill-node:hover {
+      color: var(--fg);
+      border-color: var(--red);
+      box-shadow: 0 0 12px rgba(220, 40, 40, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .skill-node.highlight {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-slow);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(220, 40, 40, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(220, 40, 40, 0.1);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-hero);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-card-inner {
+      padding: 28px;
+    }
+
+    .project-type {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .project-desc {
+      font-size: 14px;
+      color: var(--fg-muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .project-features {
+      margin-bottom: 20px;
+    }
+
+    .project-features li {
+      font-size: 13px;
+      color: var(--fg-muted);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .project-features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      opacity: 0.6;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .project-tech span {
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--fg-muted);
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .project-actions .btn {
+      padding: 10px 18px;
+      font-size: 13px;
+    }
+
+    .project-screenshot {
+      width: 100%;
+      height: 180px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, oklch(18% 0.04 260), oklch(12% 0.02 260));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-screenshot::after {
+      content: 'App Screenshot';
+      font-size: 14px;
+      color: var(--fg-muted);
+      opacity: 0.4;
+    }
+
+    /* Web corner decorations */
+    .project-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, transparent 50%, rgba(220, 40, 40, 0.05) 50%);
+      pointer-events: none;
+    }
+
+    /* ===== EXPERIENCE ===== */
+    .timeline {
+      position: relative;
+      margin-top: 48px;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--blue));
+      opacity: 0.4;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 48px 40px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-node {
+      position: absolute;
+      left: -33px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gradient-hero);
+      box-shadow: 0 0 12px var(--red-glow), 0 0 24px var(--blue-glow);
+    }
+
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--red);
+      opacity: 0.3;
+      animation: nodePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes nodePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .timeline-card {
+      padding: 28px;
+    }
+
+    .timeline-company {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-role {
+      font-size: 15px;
+      color: var(--blue);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .timeline-duration {
+      font-size: 13px;
+      color: var(--fg-muted);
+      margin-bottom: 12px;
+    }
+
+    .timeline-desc {
+      font-size: 14px;
+      color: var(--fg-muted);
+      line-height: 1.7;
+    }
+
+    /* ===== EDUCATION ===== */
+    .education-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .edu-card {
+      padding: 32px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .edu-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 20px rgba(40, 100, 220, 0.1);
+    }
+
+    .edu-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(40, 100, 220, 0.15), rgba(220, 40, 40, 0.15));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .edu-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .edu-major {
+      font-size: 15px;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .edu-status {
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+
+    /* ===== ARCHITECTURE ===== */
+    .arch-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 48px;
+      position: relative;
+    }
+
+    .arch-layers::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--blue), var(--red));
+      opacity: 0.2;
+      transform: translateX(-50%);
+    }
+
+    .arch-layer {
+      padding: 28px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .arch-layer:hover {
+      border-color: rgba(220, 40, 40, 0.3);
+      transform: translateX(8px);
+    }
+
+    .arch-layer-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .arch-layer-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .arch-layer-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .arch-layer-item {
+      padding: 6px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+
+    /* ===== AI SECTION ===== */
+    .ai-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .ai-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+
+    .ai-text {
+      font-size: 16px;
+      color: var(--fg-muted);
+      line-height: 1.8;
+    }
+
+    .ai-terminal {
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .ai-terminal-header {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .ai-terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .ai-terminal-dot:nth-child(1) {
+      background: #ff5f57;
+    }
+
+    .ai-terminal-dot:nth-child(2) {
+      background: #febc2e;
+    }
+
+    .ai-terminal-dot:nth-child(3) {
+      background: #28c840;
+    }
+
+    .ai-terminal-line {
+      color: var(--fg-muted);
+    }
+
+    .ai-terminal-line .prompt {
+      color: var(--red);
+    }
+
+    .ai-terminal-line .cmd {
+      color: var(--blue);
+    }
+
+    .ai-terminal-line .output {
+      color: var(--fg-muted);
+      opacity: 0.6;
+    }
+
+    .ai-terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--red);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: var(--transition);
+    }
+
+    .contact-item:hover {
+      border-color: var(--red);
+      box-shadow: 0 0 16px rgba(220, 40, 40, 0.1);
+    }
+
+    .contact-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--gradient-hero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .contact-label {
+      font-size: 13px;
+      color: var(--fg-muted);
+      margin-bottom: 2px;
+    }
+
+    .contact-value {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .contact-value a {
+      color: var(--blue);
+      transition: var(--transition);
+    }
+
+    .contact-value a:hover {
+      color: var(--red);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--fg-muted);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 15px;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 16px rgba(220, 40, 40, 0.15);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      position: relative;
+      z-index: 1;
+      padding: 48px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .footer-text {
+      font-size: 14px;
+      color: var(--fg-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content {
+        order: 1;
+      }
+
+      .hero-visual {
+        order: 0;
+        min-height: 350px;
+      }
+
+      .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-ctas {
+        justify-content: center;
+      }
+
+      .hero-eyebrow {
+        justify-content: center;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-content {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(12, 12, 20, 0.98);
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-mockup {
+        width: 200px;
+        height: 400px;
+      }
+
+      .tech-badge {
+        font-size: 10px;
+        padding: 6px 10px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        padding: 60px 16px;
+      }
+
+      .hero {
+        padding: 100px 16px 60px;
+      }
+
+      .about-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .education-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div class="loader-web">
+      <div class="loader-text">ZMH</div>
+    </div>
+  </div>
+
+  <!-- Background Canvas -->
+  <canvas id="web-canvas"></canvas>
+  <canvas id="cursor-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">ZMH</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-orb hero-orb-red"></div>
+    <div class="hero-orb hero-orb-blue"></div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-eyebrow reveal">Senior Flutter Developer</div>
+        <h1 class="hero-name reveal reveal-delay-1">Zin Min<br>Htike</h1>
+        <p class="hero-title reveal reveal-delay-2">Building scalable, offline-first, production-ready mobile
+          applications with Flutter.</p>
+        <p class="hero-desc reveal reveal-delay-3">I create high-quality cross-platform mobile applications using
+          Flutter, Dart, Firebase, clean architecture, and modern development workflows. I focus on performance,
+          maintainability, offline-first experiences, real-time features, and real-world business solutions.</p>
+        <div class="hero-ctas reveal reveal-delay-4">
+          <a href="#projects" class="btn btn-primary">View Projects</a>
+          <a href="#contact" class="btn btn-outline">Contact Me</a>
+          <button class="btn btn-ghost" onclick="alert('Resume download coming soon')">Download Resume</button>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="web-line web-line-1"></div>
+          <div class="web-line web-line-2"></div>
+          <div class="web-line web-line-3"></div>
+          <div class="phone-body">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-screen-logo">ZMH</div>
+              <div class="phone-screen-sub">Senior Flutter Developer</div>
+              <div class="phone-screen-lines">
+                <div class="phone-screen-line"></div>
+                <div class="phone-screen-line"></div>
+                <div class="phone-screen-line"></div>
+                <div class="phone-screen-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="tech-badges">
+            <div class="tech-badge">Flutter</div>
+            <div class="tech-badge">Dart</div>
+            <div class="tech-badge">Firebase</div>
+            <div class="tech-badge">Bloc</div>
+            <div class="tech-badge">Provider</div>
+            <div class="tech-badge">GetX</div>
+            <div class="tech-badge">Dio</div>
+            <div class="tech-badge">Drift</div>
+            <div class="tech-badge">Isar</div>
+            <div class="tech-badge">Node.js</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- About Section -->
+  <section class="section" id="about">
+    <div class="section-label reveal">About Me</div>
+    <h2 class="section-title reveal reveal-delay-1">Crafting Mobile Experiences<br>That Scale</h2>
+
+    <div class="about-grid">
+      <div class="about-text reveal reveal-delay-2">
+        <p>I am a Senior Flutter Developer with 3 years and 6 months of experience building business-focused mobile
+          applications. I have worked on e-commerce platforms, distribution management systems, POS systems, survey
+          applications, loyalty campaign platforms, real-time chat systems, driver monitoring systems, and offline-first
+          applications.</p>
+        <br>
+        <p>My strength is building reliable Flutter applications with clean architecture, scalable state management,
+          Firebase services, REST API integration, local databases, crash monitoring, analytics, and production
+          deployment workflows. I also use AI-driven development tools to improve productivity, code quality, and
+          development speed.</p>
+      </div>
+
+      <div class="about-stats reveal reveal-delay-3">
+        <div class="stat-card glass">
+          <div class="stat-number">3.5+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="stat-number">Senior</div>
+          <div class="stat-label">Flutter Developer</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="stat-number">Offline</div>
+          <div class="stat-label">First Apps</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="stat-number">Prod</div>
+          <div class="stat-label">Deployment</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="stat-number">Biz</div>
+          <div class="stat-label">Applications</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="stat-number">AI</div>
+          <div class="stat-label">Driven Development</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Skills Section -->
+  <section class="section" id="skills">
+    <div class="section-label reveal">Technical Skills</div>
+    <h2 class="section-title reveal reveal-delay-1">Skills & Expertise</h2>
+    <p class="section-subtitle reveal reveal-delay-2">A comprehensive toolkit built over years of production mobile
+      development.</p>
+
+    <div class="skills-grid">
+      <!-- Main Skills -->
+      <div class="skill-cluster glass reveal">
+        <div class="skill-cluster-title">
+          <div class="skill-cluster-icon">&#9889;</div>
+          Core Languages
+        </div>
+        <div class="skill-nodes">
+          <span class="skill-node highlight">Dart</span>
+          <span class="skill-node highlight">Flutter</span>
+          <span class="skill-node">JavaScript</span>
+          <span class="skill-node">Node.js <small style="opacity:0.5">(learning)</small></span>
+        </div>
+      </div>
+
+      <!-- Flutter Skills -->
+      <div class="skill-cluster glass reveal reveal-delay-1">
+        <div class="skill-cluster-title">
+          <div class="skill-cluster-icon">&#9881;</div>
+          Flutter Ecosystem
+        </div>
+        <div class="skill-nodes">
+          <span class="skill-node">Firebase Cloud Messaging</span>
+          <span class="skill-node">Firebase Analytics / GA4</span>
+          <span class="skill-node">Firebase Crashlytics</span>
+          <span class="skill-node">Clean Architecture</span>
+          <span class="skill-node highlight">Bloc</span>
+          <span class="skill-node">Provider</span>
+          <span class="skill-node">GetX</span>
+          <span class="skill-node">Drift</span>
+          <span class="skill-node">Isar</span>
+          <span class="skill-node">Dio</span>
+          <span class="skill-node">Offline-first</span>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div class="skill-cluster glass reveal reveal-delay-2">
+        <div class="skill-cluster-title">
+          <div class="skill-cluster-icon">&#128736;</div>
+          Tools & Platforms
+        </div>
+        <div class="skill-nodes">
+          <span class="skill-node">Git</span>
+          <span class="skill-node">GitHub</span>
+          <span class="skill-node">Android Studio</span>
+          <span class="skill-node">VS Code</span>
+          <span class="skill-node">Antigravity</span>
+          <span class="skill-node">Codex</span>
+          <span class="skill-node">Postman</span>
+          <span class="skill-node">Figma</span>
+          <span class="skill-node">Play Store</span>
+          <span class="skill-node">App Store</span>
+          <span class="skill-node">Huawei AppGallery</span>
+        </div>
+      </div>
+
+      <!-- Architecture -->
+      <div class="skill-cluster glass reveal reveal-delay-3">
+        <div class="skill-cluster-title">
+          <div class="skill-cluster-icon">&#127959;</div>
+          Architecture & Patterns
+        </div>
+        <div class="skill-nodes">
+          <span class="skill-node highlight">Clean Architecture</span>
+          <span class="skill-node">MVC</span>
+          <span class="skill-node">AI-driven Development</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Projects Section -->
+  <section class="section" id="projects">
+    <div class="section-label reveal">Featured Work</div>
+    <h2 class="section-title reveal reveal-delay-1">Projects</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Production applications built with Flutter, serving real business
+      needs.</p>
+
+    <div class="projects-grid">
+      <!-- Project 1: Wowme -->
+      <div class="project-card glass reveal">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Mobile Application Ecosystem</div>
+          <h3 class="project-name">Wowme</h3>
+          <p class="project-desc">A mobile application ecosystem containing user-facing (Wowme+) and business-facing
+            (Wowme Biz) applications.</p>
+          <ul class="project-features">
+            <li>User-facing application</li>
+            <li>Business-facing application</li>
+            <li>Production Flutter application</li>
+            <li>Business workflow support</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Dart</span><span>Firebase</span><span>Bloc</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: Bahozay -->
+      <div class="project-card glass reveal reveal-delay-1">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Online Commerce Platform</div>
+          <h3 class="project-name">Bahozay</h3>
+          <p class="project-desc">An e-commerce application with real-time chat and CRM-related communication features.
+          </p>
+          <ul class="project-features">
+            <li>Online shopping</li>
+            <li>Real-time chat</li>
+            <li>CRM communication flow</li>
+            <li>Product and customer interaction</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Firebase</span><span>Real-time Chat</span><span>Dio</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: Cannopy DMS -->
+      <div class="project-card glass reveal reveal-delay-2">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Distribution Management System</div>
+          <h3 class="project-name">Cannopy DMS</h3>
+          <p class="project-desc">A salesman mobile application for a distribution management system.</p>
+          <ul class="project-features">
+            <li>Salesman workflow</li>
+            <li>Customer visit flow</li>
+            <li>Order and sales operations</li>
+            <li>Business process support</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Offline-first</span><span>Drift</span><span>Bloc</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4: Cannopy POS -->
+      <div class="project-card glass reveal">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Point of Sales System</div>
+          <h3 class="project-name">Cannopy POS</h3>
+          <p class="project-desc">A POS application designed for sales and retail operations.</p>
+          <ul class="project-features">
+            <li>Point of sales workflow</li>
+            <li>Sales transaction support</li>
+            <li>Product and order handling</li>
+            <li>Retail business support</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Isar</span><span>Bloc</span><span>Offline-first</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5: Parama Watchtower -->
+      <div class="project-card glass reveal reveal-delay-1">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Driver Rule Monitoring System</div>
+          <h3 class="project-name">Parama Watchtower</h3>
+          <p class="project-desc">A driver monitoring application that sends notifications to owners or supervisors when
+            a driver breaks rules defined in the system.</p>
+          <ul class="project-features">
+            <li>Rule-based monitoring</li>
+            <li>Push notifications</li>
+            <li>Supervisor and owner alerts</li>
+            <li>Driver behavior tracking</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>FCM</span><span>Firebase</span><span>Bloc</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6: Market Intelligence Survey -->
+      <div class="project-card glass reveal reveal-delay-2">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Survey and Analytics App</div>
+          <h3 class="project-name">Market Intelligence Survey</h3>
+          <p class="project-desc">An application used to collect competitor brand sales information for analytics.</p>
+          <ul class="project-features">
+            <li>Market data collection</li>
+            <li>Competitor brand survey</li>
+            <li>Sales analytics support</li>
+            <li>Structured data submission</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Dio</span><span>Drift</span><span>Analytics</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 7: Survey Insights -->
+      <div class="project-card glass reveal">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Product Knowledge Collection App</div>
+          <h3 class="project-name">Survey Insights</h3>
+          <p class="project-desc">A survey application designed to collect product-centric knowledge and insights.</p>
+          <ul class="project-features">
+            <li>Product-focused surveys</li>
+            <li>Data collection</li>
+            <li>Insight generation support</li>
+            <li>Form-based workflow</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Forms</span><span>Dio</span><span>Bloc</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 8: Nexxus -->
+      <div class="project-card glass reveal reveal-delay-1">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Campaign and Lucky Draw Platform</div>
+          <h3 class="project-name">Nexxus</h3>
+          <p class="project-desc">A campaign platform where vendors can run lucky draw campaigns, word hunt campaigns,
+            and character collection campaigns. Users join by scanning QR codes contained in products.</p>
+          <ul class="project-features">
+            <li>Vendor campaign management</li>
+            <li>Lucky draw, word hunt, character collection</li>
+            <li>QR code scanning</li>
+            <li>User participation flow</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>QR Scanner</span><span>Firebase</span><span>Bloc</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 9: Yum Yum Myanmar -->
+      <div class="project-card glass reveal reveal-delay-2">
+        <div class="project-card-inner">
+          <div class="project-screenshot"></div>
+          <div class="project-type">Flutter Mobile Application</div>
+          <h3 class="project-name">Yum Yum Myanmar</h3>
+          <p class="project-desc">A production Flutter mobile application. Details coming soon.</p>
+          <ul class="project-features">
+            <li>Flutter app development</li>
+            <li>Production application experience</li>
+          </ul>
+          <div class="project-tech">
+            <span>Flutter</span><span>Dart</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
+            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Experience Section -->
+  <section class="section" id="experience">
+    <div class="section-label reveal">Career Path</div>
+    <h2 class="section-title reveal reveal-delay-1">Experience</h2>
+
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-node"></div>
+        <div class="timeline-card glass">
+          <div class="timeline-company">Cannopy Technologies Company</div>
+          <div class="timeline-role">Senior Flutter Developer</div>
+          <div class="timeline-duration">Sep 2025 — Present</div>
+          <p class="timeline-desc">Currently working as a Senior Flutter Developer, focusing on business applications,
+            distribution systems, POS systems, offline-first apps, scalable Flutter architecture, and production-level
+            mobile development.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="timeline-node"></div>
+        <div class="timeline-card glass">
+          <div class="timeline-company">Sabahna Technologies Company</div>
+          <div class="timeline-role">Flutter Developer / Senior Flutter Developer</div>
+          <div class="timeline-duration">Jan 2023 — Sep 2025</div>
+          <p class="timeline-desc">Worked on multiple production Flutter applications, including e-commerce, CRM, mobile
+            business systems, real-time chat, Firebase services, and scalable mobile app workflows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Education Section -->
+  <section class="section" id="education">
+    <div class="section-label reveal">Education</div>
+    <h2 class="section-title reveal reveal-delay-1">Education</h2>
+
+    <div class="education-grid">
+      <div class="edu-card glass reveal">
+        <div class="edu-icon">&#127891;</div>
+        <div class="edu-name">University of the People</div>
+        <div class="edu-major">Computer Science</div>
+        <div class="edu-status">Currently Enrolled</div>
+      </div>
+
+      <div class="edu-card glass reveal reveal-delay-1">
+        <div class="edu-icon">&#127979;</div>
+        <div class="edu-name">West Yangon University</div>
+        <div class="edu-major">Undergraduate Studies</div>
+        <div class="edu-status">Completed</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Architecture Section -->
+  <section class="section" id="architecture">
+    <div class="section-label reveal">System Design</div>
+    <h2 class="section-title reveal reveal-delay-1">App Architecture</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Clean, layered architecture for maintainable and scalable Flutter
+      applications.</p>
+
+    <div class="arch-layers">
+      <div class="arch-layer glass reveal">
+        <div class="arch-layer-label">Layer 01</div>
+        <div class="arch-layer-title">Presentation Layer</div>
+        <div class="arch-layer-items">
+          <span class="arch-layer-item">UI Widgets</span>
+          <span class="arch-layer-item">Screens</span>
+          <span class="arch-layer-item">State Management (Bloc, Provider, GetX)</span>
+        </div>
+      </div>
+
+      <div class="arch-layer glass reveal reveal-delay-1">
+        <div class="arch-layer-label">Layer 02</div>
+        <div class="arch-layer-title">Business Logic Layer</div>
+        <div class="arch-layer-items">
+          <span class="arch-layer-item">Use Cases</span>
+          <span class="arch-layer-item">Domain Models</span>
+          <span class="arch-layer-item">Business Rules</span>
+        </div>
+      </div>
+
+      <div class="arch-layer glass reveal reveal-delay-2">
+        <div class="arch-layer-label">Layer 03</div>
+        <div class="arch-layer-title">Data Layer</div>
+        <div class="arch-layer-items">
+          <span class="arch-layer-item">Repositories</span>
+          <span class="arch-layer-item">Data Sources</span>
+          <span class="arch-layer-item">Service Layer</span>
+        </div>
+      </div>
+
+      <div class="arch-layer glass reveal reveal-delay-3">
+        <div class="arch-layer-label">Integrations</div>
+        <div class="arch-layer-title">Services & Infrastructure</div>
+        <div class="arch-layer-items">
+          <span class="arch-layer-item">Dio (API)</span>
+          <span class="arch-layer-item">Drift (Local DB)</span>
+          <span class="arch-layer-item">Isar (Local DB)</span>
+          <span class="arch-layer-item">Firebase Crashlytics</span>
+          <span class="arch-layer-item">Firebase Analytics / GA4</span>
+          <span class="arch-layer-item">Firebase Cloud Messaging</span>
+          <span class="arch-layer-item">Offline-first Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- AI-Driven Development Section -->
+  <section class="section ai-section" id="ai">
+    <div class="ai-grid-bg"></div>
+    <div class="section-label reveal">Modern Workflow</div>
+    <h2 class="section-title reveal reveal-delay-1">AI-Driven Development</h2>
+
+    <div class="ai-content">
+      <div class="ai-text reveal reveal-delay-2">
+        <p>I use AI tools such as Codex and Antigravity to improve development speed, refactor code, generate ideas,
+          debug issues, and maintain better productivity while still focusing on clean, reliable, and production-quality
+          code.</p>
+        <br>
+        <p>AI-assisted development is not about replacing engineering judgment — it's about amplifying it. I leverage
+          these tools to iterate faster, catch edge cases earlier, and maintain higher code quality across large
+          codebases.</p>
+      </div>
+
+      <div class="ai-terminal reveal reveal-delay-3">
+        <div class="ai-terminal-header">
+          <div class="ai-terminal-dot"></div>
+          <div class="ai-terminal-dot"></div>
+          <div class="ai-terminal-dot"></div>
+        </div>
+        <div class="ai-terminal-line"><span class="prompt">$</span> <span class="cmd">codex refactor --target
+            state_management</span></div>
+        <div class="ai-terminal-line"><span class="output">Analyzing Bloc patterns...</span></div>
+        <div class="ai-terminal-line"><span class="output">Found 3 optimization opportunities</span></div>
+        <div class="ai-terminal-line"><span class="output">Applied clean architecture principles</span></div>
+        <div class="ai-terminal-line"><span class="output">Tests passing: 47/47</span></div>
+        <br>
+        <div class="ai-terminal-line"><span class="prompt">$</span> <span class="cmd">antigravity review --scope
+            lib/features/</span></div>
+        <div class="ai-terminal-line"><span class="output">Code quality score: 94/100</span></div>
+        <div class="ai-terminal-line"><span class="output">2 suggestions applied</span></div>
+        <div class="ai-terminal-line"><span class="prompt">$</span> <span class="ai-terminal-cursor"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Contact Section -->
+  <section class="section" id="contact">
+    <div class="section-label reveal">Get in Touch</div>
+    <h2 class="section-title reveal reveal-delay-1">Contact</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Let's discuss your next mobile application or collaboration
+      opportunity.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal reveal-delay-3">
+        <div class="contact-item">
+          <div class="contact-icon">&#9993;</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:zmh1.sabahna@gmail.com">zmh1.sabahna@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">&#128222;</div>
+          <div>
+            <div class="contact-label">Phone</div>
+            <div class="contact-value"><a href="tel:+959780136579">+95 9 780 136 579</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">&#128188;</div>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-value"><a href="https://www.linkedin.com/in/zin-min-htike-385501260/" target="_blank"
+                rel="noopener">linkedin.com/in/zin-min-htike</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">&#128187;</div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-value"><a href="https://github.com/ZinMinHtike72" target="_blank"
+                rel="noopener">github.com/ZinMinHtike72</a></div>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn btn-outline" onclick="copyEmail()">Copy Email</button>
+          <button class="btn btn-ghost" onclick="alert('Resume download coming soon')">Download Resume</button>
+        </div>
+      </div>
+
+      <form class="contact-form reveal reveal-delay-4" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" required placeholder="Project inquiry">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">Zin Min Htike</div>
+    <p class="footer-text">&copy; 2026 Zin Min Htike. Senior Flutter Developer. Built with passion, clean architecture,
+      and modern mobile engineering.</p>
+  </footer>
+
+  <script>
+    // ===== LOADING SCREEN =====
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 1200);
+    });
+
+    // ===== NAVIGATION =====
+    const nav = document.getElementById('nav');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // ===== SCROLL REVEAL =====
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ===== SPIDER-WEB BACKGROUND =====
+    const webCanvas = document.getElementById('web-canvas');
+    const webCtx = webCanvas.getContext('2d');
+    let webNodes = [];
+    let webConnections = [];
+
+    function resizeWebCanvas() {
+      webCanvas.width = window.innerWidth;
+      webCanvas.height = window.innerHeight;
+      initWebNodes();
+    }
+
+    function initWebNodes() {
+      webNodes = [];
+      const count = Math.floor((webCanvas.width * webCanvas.height) / 25000);
+      for (let i = 0; i < count; i++) {
+        webNodes.push({
+          x: Math.random() * webCanvas.width,
+          y: Math.random() * webCanvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 1.5 + 0.5
+        });
+      }
+    }
+
+    function drawWeb() {
+      webCtx.clearRect(0, 0, webCanvas.width, webCanvas.height);
+
+      // Update positions
+      webNodes.forEach(node => {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > webCanvas.width) node.vx *= -1;
+        if (node.y < 0 || node.y > webCanvas.height) node.vy *= -1;
+      });
+
+      // Draw connections
+      const maxDist = 150;
+      for (let i = 0; i < webNodes.length; i++) {
+        for (let j = i + 1; j < webNodes.length; j++) {
+          const dx = webNodes[i].x - webNodes[j].x;
+          const dy = webNodes[i].y - webNodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            const opacity = (1 - dist / maxDist) * 0.15;
+            webCtx.beginPath();
+            webCtx.moveTo(webNodes[i].x, webNodes[i].y);
+            webCtx.lineTo(webNodes[j].x, webNodes[j].y);
+            webCtx.strokeStyle = `rgba(220, 40, 40, ${opacity})`;
+            webCtx.lineWidth = 0.5;
+            webCtx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      webNodes.forEach(node => {
+        webCtx.beginPath();
+        webCtx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        webCtx.fillStyle = 'rgba(220, 40, 40, 0.3)';
+        webCtx.fill();
+      });
+
+      requestAnimationFrame(drawWeb);
+    }
+
+    window.addEventListener('resize', resizeWebCanvas);
+    resizeWebCanvas();
+    drawWeb();
+
+    // ===== CURSOR TRAIL =====
+    const cursorCanvas = document.getElementById('cursor-canvas');
+    const cursorCtx = cursorCanvas.getContext('2d');
+    let cursorTrail = [];
+    let mouseX = 0, mouseY = 0;
+
+    function resizeCursorCanvas() {
+      cursorCanvas.width = window.innerWidth;
+      cursorCanvas.height = window.innerHeight;
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorTrail.push({ x: mouseX, y: mouseY, life: 1 });
+      if (cursorTrail.length > 30) cursorTrail.shift();
+    });
+
+    function drawCursorTrail() {
+      cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
+      cursorTrail.forEach((point, i) => {
+        point.life -= 0.03;
+        if (point.life > 0) {
+          cursorCtx.beginPath();
+          cursorCtx.arc(point.x, point.y, point.life * 4, 0, Math.PI * 2);
+          const gradient = cursorCtx.createRadialGradient(point.x, point.y, 0, point.x, point.y, point.life * 4);
+          gradient.addColorStop(0, `rgba(220, 40, 40, ${point.life * 0.4})`);
+          gradient.addColorStop(1, `rgba(40, 100, 220, 0)`);
+          cursorCtx.fillStyle = gradient;
+          cursorCtx.fill();
+        }
+      });
+
+      cursorTrail = cursorTrail.filter(p => p.life > 0);
+      requestAnimationFrame(drawCursorTrail);
+    }
+
+    window.addEventListener('resize', resizeCursorCanvas);
+    resizeCursorCanvas();
+    drawCursorTrail();
+
+    // ===== 3D TILT ON PROJECT CARDS =====
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+      });
+    });
+
+    // ===== COPY EMAIL =====
+    function copyEmail() {
+      navigator.clipboard.writeText('zmh1.sabahna@gmail.com').then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = original, 2000);
+      });
+    }
+
+    // ===== FORM HANDLER =====
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const original = btn.textContent;
+      btn.textContent = 'Message Sent!';
+      btn.style.background = 'oklch(58% 0.16 145)';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+
+    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
