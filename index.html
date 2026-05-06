@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet">
   <style>
     /* ===== CSS CUSTOM PROPERTIES ===== */
@@ -60,6 +60,7 @@
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      cursor: none;
     }
 
     a {
@@ -74,7 +75,7 @@
 
     button {
       font-family: inherit;
-      cursor: pointer;
+      cursor: none;
       border: none;
       background: none;
     }
@@ -83,15 +84,73 @@
       list-style: none;
     }
 
+    input,
+    textarea {
+      cursor: none;
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      pointer-events: none;
+      z-index: 10001;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+      mix-blend-mode: screen;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(220, 40, 40, 0.4);
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+
+    .cursor-dot.hovering {
+      width: 16px;
+      height: 16px;
+      background: var(--blue);
+    }
+
+    .cursor-ring.hovering {
+      width: 52px;
+      height: 52px;
+      border-color: rgba(40, 100, 220, 0.5);
+    }
+
+    /* ===== SCROLL PROGRESS ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      z-index: 10002;
+      background: var(--gradient-hero);
+      transform-origin: left;
+      transform: scaleX(0);
+      box-shadow: 0 0 8px var(--red-glow), 0 0 16px var(--blue-glow);
+    }
+
     /* ===== LOADING SCREEN ===== */
     #loader {
       position: fixed;
       inset: 0;
-      z-index: 10000;
+      z-index: 10003;
       background: var(--bg-deep);
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      gap: 24px;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
 
@@ -146,6 +205,27 @@
       }
     }
 
+    .loader-bar {
+      width: 160px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      height: 100%;
+      width: 0;
+      background: var(--gradient-hero);
+      animation: loaderFill 1.2s ease forwards;
+    }
+
+    @keyframes loaderFill {
+      to {
+        width: 100%;
+      }
+    }
+
     /* ===== CANVAS BACKGROUNDS ===== */
     #web-canvas {
       position: fixed;
@@ -160,6 +240,14 @@
       inset: 0;
       z-index: 9998;
       pointer-events: none;
+    }
+
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     /* ===== SCROLLBAR ===== */
@@ -334,6 +422,14 @@
       color: var(--fg);
     }
 
+    /* Magnetic button inner */
+    .btn .btn-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     /* ===== GLASS CARD ===== */
     .glass {
       background: rgba(255, 255, 255, 0.03);
@@ -495,6 +591,105 @@
       min-height: 500px;
     }
 
+    /* 3D Floating Icons */
+    .floating-icons {
+      position: absolute;
+      inset: -80px;
+      z-index: 1;
+      pointer-events: none;
+      perspective: 800px;
+    }
+
+    .floating-icon {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transform-style: preserve-3d;
+      animation: floatIcon 6s ease-in-out infinite;
+    }
+
+    .floating-icon:hover {
+      box-shadow: 0 0 20px rgba(220, 40, 40, 0.3);
+      border-color: var(--red);
+    }
+
+    .floating-icon:nth-child(1) {
+      top: 0;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .floating-icon:nth-child(2) {
+      top: 10%;
+      right: 0;
+      animation-delay: 0.5s;
+    }
+
+    .floating-icon:nth-child(3) {
+      top: 35%;
+      left: -5%;
+      animation-delay: 1s;
+    }
+
+    .floating-icon:nth-child(4) {
+      top: 50%;
+      right: -5%;
+      animation-delay: 1.5s;
+    }
+
+    .floating-icon:nth-child(5) {
+      top: 70%;
+      left: 0;
+      animation-delay: 2s;
+    }
+
+    .floating-icon:nth-child(6) {
+      top: 85%;
+      right: 5%;
+      animation-delay: 2.5s;
+    }
+
+    .floating-icon:nth-child(7) {
+      top: 20%;
+      left: -10%;
+      animation-delay: 3s;
+    }
+
+    .floating-icon:nth-child(8) {
+      top: 60%;
+      right: -10%;
+      animation-delay: 3.5s;
+    }
+
+    @keyframes floatIcon {
+
+      0%,
+      100% {
+        transform: translateY(0) rotateX(0) rotateY(0);
+      }
+
+      25% {
+        transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
+      }
+
+      50% {
+        transform: translateY(-6px) rotateX(-3deg) rotateY(8deg);
+      }
+
+      75% {
+        transform: translateY(-18px) rotateX(4deg) rotateY(-3deg);
+      }
+    }
+
     /* City Skyline */
     .city-skyline {
       position: absolute;
@@ -512,12 +707,35 @@
     }
 
     /* Phone Mockup */
+    .phone-mockup-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
     .phone-mockup {
       position: relative;
       z-index: 2;
       width: 260px;
       height: 520px;
-      animation: phoneFloat 6s ease-in-out infinite;
+      cursor: none;
+      transition: transform 0.15s ease-out;
+      transform-style: preserve-3d;
+    }
+
+    .phone-mockup-inner {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .phone-mockup.flipped .phone-mockup-inner {
+      transform: rotateY(180deg);
     }
 
     .phone-body {
@@ -529,6 +747,62 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(220, 40, 40, 0.1), 0 0 40px rgba(40, 100, 220, 0.1);
       overflow: hidden;
       position: relative;
+      backface-visibility: hidden;
+    }
+
+    .phone-body-back {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, oklch(18% 0.05 260), oklch(10% 0.03 260));
+      border-radius: 36px;
+      border: 2px solid var(--border);
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .phone-back-logo {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .phone-back-code {
+      font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--fg-muted);
+      line-height: 1.8;
+      text-align: left;
+      width: 100%;
+    }
+
+    .phone-back-code .kw {
+      color: var(--red);
+    }
+
+    .phone-back-code .fn {
+      color: var(--blue);
+    }
+
+    .phone-back-code .str {
+      color: oklch(70% 0.15 145);
+    }
+
+    .phone-back-hint {
+      position: absolute;
+      bottom: 16px;
+      font-size: 11px;
+      color: var(--fg-muted);
+      opacity: 0.5;
     }
 
     .phone-notch {
@@ -552,6 +826,22 @@
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
+      transition: opacity 0.3s ease;
+    }
+
+    .phone-screen-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .phone-screen-content.hidden {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      position: absolute;
     }
 
     .phone-screen-logo {
@@ -583,6 +873,7 @@
       height: 6px;
       border-radius: 3px;
       background: rgba(255, 255, 255, 0.06);
+      transition: width 0.5s ease, background 0.3s ease;
     }
 
     .phone-screen-line:nth-child(1) {
@@ -601,33 +892,78 @@
       width: 45%;
     }
 
-    /* Web Lines on Phone */
-    .web-line {
+    .phone-mockup:hover .phone-screen-line:nth-child(1) {
+      background: var(--red);
+      opacity: 0.4;
+    }
+
+    .phone-mockup:hover .phone-screen-line:nth-child(2) {
+      background: var(--blue);
+      opacity: 0.4;
+    }
+
+    .phone-mockup:hover .phone-screen-line:nth-child(3) {
+      background: var(--red);
+      opacity: 0.3;
+    }
+
+    .phone-mockup:hover .phone-screen-line:nth-child(4) {
+      background: var(--blue);
+      opacity: 0.3;
+    }
+
+    /* Phone screen stats view */
+    .phone-screen-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .phone-stat-mini {
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      text-align: center;
+    }
+
+    .phone-stat-mini .val {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .phone-stat-mini .lbl {
+      font-size: 9px;
+      color: var(--fg-muted);
+      margin-top: 2px;
+    }
+
+    /* Web Lines Canvas */
+    #phone-web-canvas {
       position: absolute;
+      inset: -60px;
       z-index: 1;
-      width: 2px;
-      height: 80px;
-      background: linear-gradient(to bottom, var(--red), transparent);
+      pointer-events: none;
+    }
+
+    /* Phone glow */
+    .phone-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(220, 40, 40, 0.12) 0%, rgba(40, 100, 220, 0.08) 40%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.3s ease;
       opacity: 0.6;
-    }
-
-    .web-line-1 {
-      top: -80px;
-      left: 30%;
-      transform: rotate(-15deg);
-    }
-
-    .web-line-2 {
-      top: -60px;
-      right: 25%;
-      transform: rotate(10deg);
-      background: linear-gradient(to bottom, var(--blue), transparent);
-    }
-
-    .web-line-3 {
-      top: -70px;
-      left: 50%;
-      transform: rotate(-5deg);
     }
 
     /* Tech Badges */
@@ -635,6 +971,7 @@
       position: absolute;
       inset: -40px;
       z-index: 3;
+      pointer-events: none;
     }
 
     .tech-badge {
@@ -648,92 +985,83 @@
       font-weight: 600;
       font-family: var(--font-display);
       color: var(--fg-muted);
-      animation: badgeFloat 4s ease-in-out infinite;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+      pointer-events: auto;
+      cursor: none;
       white-space: nowrap;
+    }
+
+    .tech-badge.glowing {
+      border-color: var(--red);
+      color: var(--fg);
+      box-shadow: 0 0 16px rgba(220, 40, 40, 0.2);
     }
 
     .tech-badge:nth-child(1) {
       top: 5%;
       left: -10%;
-      animation-delay: 0s;
     }
 
     .tech-badge:nth-child(2) {
       top: 15%;
       right: -15%;
-      animation-delay: 0.5s;
     }
 
     .tech-badge:nth-child(3) {
       top: 40%;
       left: -20%;
-      animation-delay: 1s;
     }
 
     .tech-badge:nth-child(4) {
       top: 55%;
       right: -18%;
-      animation-delay: 1.5s;
     }
 
     .tech-badge:nth-child(5) {
       top: 70%;
       left: -12%;
-      animation-delay: 2s;
     }
 
     .tech-badge:nth-child(6) {
       top: 80%;
       right: -10%;
-      animation-delay: 2.5s;
     }
 
     .tech-badge:nth-child(7) {
       top: 25%;
       left: -25%;
-      animation-delay: 0.8s;
     }
 
     .tech-badge:nth-child(8) {
       top: 65%;
       right: -22%;
-      animation-delay: 1.8s;
     }
 
     .tech-badge:nth-child(9) {
       top: 90%;
       left: 5%;
-      animation-delay: 3s;
     }
 
     .tech-badge:nth-child(10) {
       top: 0%;
       right: 5%;
-      animation-delay: 3.5s;
     }
 
-    @keyframes phoneFloat {
-
-      0%,
-      100% {
-        transform: translateY(0) rotate(0deg);
-      }
-
-      50% {
-        transform: translateY(-20px) rotate(1deg);
-      }
+    /* Phone flip hint */
+    .phone-flip-hint {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--fg-muted);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
     }
 
-    @keyframes badgeFloat {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-8px);
-      }
+    .phone-mockup:hover .phone-flip-hint {
+      opacity: 0.6;
     }
 
     /* Hero gradient orbs */
@@ -743,6 +1071,7 @@
       filter: blur(80px);
       opacity: 0.15;
       pointer-events: none;
+      animation: orbFloat 8s ease-in-out infinite;
     }
 
     .hero-orb-red {
@@ -751,6 +1080,7 @@
       background: var(--red);
       top: 10%;
       right: 10%;
+      animation-delay: 0s;
     }
 
     .hero-orb-blue {
@@ -759,6 +1089,23 @@
       background: var(--blue);
       bottom: 20%;
       left: 5%;
+      animation-delay: 2s;
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      33% {
+        transform: translate(20px, -30px) scale(1.05);
+      }
+
+      66% {
+        transform: translate(-15px, 20px) scale(0.95);
+      }
     }
 
     /* ===== ABOUT ===== */
@@ -790,6 +1137,7 @@
     .stat-card:hover {
       border-color: var(--red);
       box-shadow: 0 0 20px rgba(220, 40, 40, 0.1);
+      transform: translateY(-4px);
     }
 
     .stat-card::after {
@@ -876,7 +1224,7 @@
       font-weight: 500;
       color: var(--fg-muted);
       transition: var(--transition);
-      cursor: default;
+      cursor: none;
     }
 
     .skill-node:hover {
@@ -889,6 +1237,14 @@
     .skill-node.highlight {
       border-color: var(--blue);
       color: var(--blue);
+    }
+
+    /* Skills web canvas */
+    #skills-web-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
     }
 
     /* ===== PROJECTS ===== */
@@ -908,7 +1264,6 @@
     }
 
     .project-card:hover {
-      transform: translateY(-8px);
       border-color: rgba(220, 40, 40, 0.3);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(220, 40, 40, 0.1);
     }
@@ -1144,6 +1499,7 @@
       padding: 32px;
       position: relative;
       transition: var(--transition);
+      transform-style: preserve-3d;
     }
 
     .edu-card:hover {
@@ -1161,6 +1517,11 @@
       justify-content: center;
       font-size: 24px;
       margin-bottom: 16px;
+      transition: transform 0.4s ease;
+    }
+
+    .edu-card:hover .edu-icon {
+      transform: rotateY(180deg);
     }
 
     .edu-name {
@@ -1206,11 +1567,17 @@
       padding: 28px;
       position: relative;
       transition: var(--transition);
+      cursor: none;
     }
 
     .arch-layer:hover {
       border-color: rgba(220, 40, 40, 0.3);
       transform: translateX(8px);
+    }
+
+    .arch-layer.expanded {
+      border-color: var(--red);
+      box-shadow: 0 0 24px rgba(220, 40, 40, 0.1);
     }
 
     .arch-layer-label {
@@ -1242,6 +1609,12 @@
       border: 1px solid rgba(255, 255, 255, 0.06);
       font-size: 13px;
       color: var(--fg-muted);
+      transition: var(--transition);
+    }
+
+    .arch-layer-item:hover {
+      border-color: var(--blue);
+      color: var(--blue);
     }
 
     /* ===== AI SECTION ===== */
@@ -1371,6 +1744,7 @@
     .contact-item:hover {
       border-color: var(--red);
       box-shadow: 0 0 16px rgba(220, 40, 40, 0.1);
+      transform: translateX(4px);
     }
 
     .contact-icon {
@@ -1383,6 +1757,11 @@
       justify-content: center;
       font-size: 18px;
       flex-shrink: 0;
+      transition: transform 0.4s ease;
+    }
+
+    .contact-item:hover .contact-icon {
+      transform: rotateY(180deg);
     }
 
     .contact-label {
@@ -1482,6 +1861,29 @@
       margin-bottom: 12px;
     }
 
+    /* ===== CLICK PARTICLE BURST ===== */
+    .click-particle {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      animation: particleBurst 0.6s ease-out forwards;
+    }
+
+    @keyframes particleBurst {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+      }
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
       .hero-inner {
@@ -1557,6 +1959,28 @@
         font-size: 10px;
         padding: 6px 10px;
       }
+
+      .phone-flip-hint {
+        display: none;
+      }
+
+      .floating-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+
+      body,
+      button,
+      input,
+      textarea {
+        cursor: auto;
+      }
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none;
+      }
     }
 
     @media (max-width: 600px) {
@@ -1595,15 +2019,26 @@
 
 <body>
 
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <!-- Loading Screen -->
   <div id="loader">
     <div class="loader-web">
       <div class="loader-text">ZMH</div>
     </div>
+    <div class="loader-bar">
+      <div class="loader-bar-fill"></div>
+    </div>
   </div>
 
   <!-- Background Canvas -->
   <canvas id="web-canvas"></canvas>
+  <canvas id="particle-canvas"></canvas>
   <canvas id="cursor-canvas"></canvas>
 
   <!-- Navigation -->
@@ -1633,48 +2068,161 @@
       <div class="hero-content">
         <div class="hero-eyebrow reveal">Flutter Developer</div>
         <h1 class="hero-name reveal reveal-delay-1">Zin Min<br>Htike</h1>
-        <p class="hero-title reveal reveal-delay-2">Building scalable, offline-first, production-ready mobile
-          applications with Flutter.</p>
+        <p class="hero-title reveal reveal-delay-2" id="heroTitle"></p>
         <p class="hero-desc reveal reveal-delay-3">I create high-quality cross-platform mobile applications using
           Flutter, Dart, Firebase, clean architecture, and modern development workflows. I focus on performance,
           maintainability, offline-first experiences, real-time features, and real-world business solutions.</p>
         <div class="hero-ctas reveal reveal-delay-4">
-          <a href="#projects" class="btn btn-primary">View Projects</a>
-          <a href="#contact" class="btn btn-outline">Contact Me</a>
-          <button class="btn btn-ghost" onclick="alert('Resume download coming soon')">Download Resume</button>
+          <a href="#projects" class="btn btn-primary magnetic-btn"><span class="btn-inner">View Projects</span></a>
+          <a href="#contact" class="btn btn-outline magnetic-btn"><span class="btn-inner">Contact Me</span></a>
+          <button class="btn btn-ghost magnetic-btn" onclick="alert('Resume download coming soon')"><span
+              class="btn-inner">Download Resume</span></button>
         </div>
       </div>
 
       <div class="hero-visual">
-        <div class="phone-mockup">
-          <div class="web-line web-line-1"></div>
-          <div class="web-line web-line-2"></div>
-          <div class="web-line web-line-3"></div>
-          <div class="phone-body">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="phone-screen-logo">ZMH</div>
-              <div class="phone-screen-sub">Flutter Developer</div>
-              <div class="phone-screen-lines">
-                <div class="phone-screen-line"></div>
-                <div class="phone-screen-line"></div>
-                <div class="phone-screen-line"></div>
-                <div class="phone-screen-line"></div>
-              </div>
+        <div class="phone-mockup-wrapper">
+          <div class="phone-glow" id="phoneGlow"></div>
+          <canvas id="phone-web-canvas"></canvas>
+
+          <!-- 3D Floating Icons -->
+          <div class="floating-icons">
+            <div class="floating-icon" title="Flutter">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 2L14 12L4 22" stroke="currentColor" stroke-width="2" />
+                <path d="M14 12L20 6L14 2" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Dart">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L20 8L12 22L4 8L12 2Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Firebase">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L4 14L12 22L20 14L12 2Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Cloud">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M18 10H16.74C16.28 7.18 13.83 5 11 5C8.04 5 5.62 7.38 5.27 10.27C3.35 10.62 2 12.34 2 14.5C2 17.26 4.24 19.5 7 19.5H18C20.21 19.5 22 17.71 22 15.5C22 13.29 20.21 11.5 18 11.5V10Z"
+                  stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Database">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <ellipse cx="12" cy="6" rx="8" ry="3" stroke="currentColor" stroke-width="2" />
+                <path d="M4 6V18C4 19.66 7.58 21 12 21C16.42 21 20 19.66 20 18V6" stroke="currentColor"
+                  stroke-width="2" />
+                <path d="M4 12C4 13.66 7.58 15 12 15C16.42 15 20 13.66 20 12" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Code">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16 18L22 12L16 6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 6L2 12L8 18" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="Architecture">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+                <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="floating-icon" title="AI">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                <path d="M12 2V6M12 18V22M2 12H6M18 12H22" stroke="currentColor" stroke-width="2" />
+                <path d="M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93"
+                  stroke="currentColor" stroke-width="2" />
+              </svg>
             </div>
           </div>
-          <div class="tech-badges">
-            <div class="tech-badge">Flutter</div>
-            <div class="tech-badge">Dart</div>
-            <div class="tech-badge">Firebase</div>
-            <div class="tech-badge">Bloc</div>
-            <div class="tech-badge">Provider</div>
-            <div class="tech-badge">GetX</div>
-            <div class="tech-badge">Dio</div>
-            <div class="tech-badge">Drift</div>
-            <div class="tech-badge">Isar</div>
-            <div class="tech-badge">Node.js</div>
+
+          <div class="phone-mockup" id="phoneMockup">
+            <div class="phone-mockup-inner">
+              <!-- Front -->
+              <div class="phone-body">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <!-- Default view -->
+                  <div class="phone-screen-content" id="screenDefault">
+                    <div class="phone-screen-logo">ZMH</div>
+                    <div class="phone-screen-sub">Flutter Developer</div>
+                    <div class="phone-screen-lines">
+                      <div class="phone-screen-line"></div>
+                      <div class="phone-screen-line"></div>
+                      <div class="phone-screen-line"></div>
+                      <div class="phone-screen-line"></div>
+                    </div>
+                  </div>
+                  <!-- Stats view -->
+                  <div class="phone-screen-content hidden" id="screenStats">
+                    <div class="phone-screen-logo" style="font-size:18px">Stats</div>
+                    <div class="phone-screen-stats">
+                      <div class="phone-stat-mini">
+                        <div class="val">9</div>
+                        <div class="lbl">Apps</div>
+                      </div>
+                      <div class="phone-stat-mini">
+                        <div class="val">3.5+</div>
+                        <div class="lbl">Years</div>
+                      </div>
+                      <div class="phone-stat-mini">
+                        <div class="val">3</div>
+                        <div class="lbl">Stores</div>
+                      </div>
+                      <div class="phone-stat-mini">
+                        <div class="val">&#8734;</div>
+                        <div class="lbl">Commits</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Code view -->
+                  <div class="phone-screen-content hidden" id="screenCode">
+                    <div
+                      style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--fg-muted);text-align:left;width:100%;line-height:1.7">
+                      <span style="color:var(--red)">class</span> <span style="color:var(--blue)">App</span> {<br>
+                      &nbsp;&nbsp;<span style="color:var(--red)">final</span> router;<br>
+                      &nbsp;&nbsp;<span style="color:var(--red)">final</span> di;<br>
+                      &nbsp;&nbsp;<span style="color:var(--red)">const</span> <span
+                        style="color:var(--blue)">App</span>();<br>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Back -->
+              <div class="phone-body-back">
+                <div class="phone-back-logo">ZMH</div>
+                <div class="phone-back-code">
+                  <span class="kw">class</span> <span class="fn">Portfolio</span> {<br>
+                  &nbsp;&nbsp;<span class="kw">final</span> name = <span class="str">"Zin Min Htike"</span>;<br>
+                  &nbsp;&nbsp;<span class="kw">final</span> role = <span class="str">"Flutter Dev"</span>;<br>
+                  &nbsp;&nbsp;<span class="kw">final</span> exp = <span class="str">"3.5 years"</span>;<br>
+                  &nbsp;&nbsp;<span class="kw">bool</span> available = <span class="kw">true</span>;<br>
+                  }
+                </div>
+                <div class="phone-back-hint">Click to flip back</div>
+              </div>
+            </div>
+            <div class="tech-badges">
+              <div class="tech-badge">Flutter</div>
+              <div class="tech-badge">Dart</div>
+              <div class="tech-badge">Firebase</div>
+              <div class="tech-badge">Bloc</div>
+              <div class="tech-badge">Provider</div>
+              <div class="tech-badge">GetX</div>
+              <div class="tech-badge">Dio</div>
+              <div class="tech-badge">Drift</div>
+              <div class="tech-badge">Isar</div>
+              <div class="tech-badge">Node.js</div>
+            </div>
           </div>
+          <div class="phone-flip-hint">Click to flip</div>
         </div>
       </div>
     </div>
@@ -1702,28 +2250,28 @@
 
       <div class="about-stats reveal reveal-delay-3">
         <div class="stat-card glass">
-          <div class="stat-number">3.5+</div>
+          <div class="stat-number" data-count="3.5" data-suffix="+">0</div>
           <div class="stat-label">Years Experience</div>
         </div>
         <div class="stat-card glass">
-          <div class="stat-number">Senior</div>
-          <div class="stat-label">Flutter Developer</div>
+          <div class="stat-number" data-text="Flutter">Flutter</div>
+          <div class="stat-label">Developer</div>
         </div>
         <div class="stat-card glass">
-          <div class="stat-number">Offline</div>
-          <div class="stat-label">First Apps</div>
+          <div class="stat-number" data-count="9" data-suffix="">0</div>
+          <div class="stat-label">Production Apps</div>
         </div>
         <div class="stat-card glass">
-          <div class="stat-number">Prod</div>
-          <div class="stat-label">Deployment</div>
+          <div class="stat-number" data-count="3" data-suffix="">0</div>
+          <div class="stat-label">App Stores</div>
         </div>
         <div class="stat-card glass">
-          <div class="stat-number">Biz</div>
-          <div class="stat-label">Applications</div>
+          <div class="stat-number" data-text="Offline">Offline</div>
+          <div class="stat-label">First Architecture</div>
         </div>
         <div class="stat-card glass">
-          <div class="stat-number">AI</div>
-          <div class="stat-label">Driven Development</div>
+          <div class="stat-number" data-text="AI">AI</div>
+          <div class="stat-label">Driven Workflow</div>
         </div>
       </div>
     </div>
@@ -1732,7 +2280,8 @@
   <div class="section-divider"></div>
 
   <!-- Skills Section -->
-  <section class="section" id="skills">
+  <section class="section" id="skills" style="position:relative;">
+    <canvas id="skills-web-canvas"></canvas>
     <div class="section-label reveal">Technical Skills</div>
     <h2 class="section-title reveal reveal-delay-1">Skills & Expertise</h2>
     <p class="section-subtitle reveal reveal-delay-2">A comprehensive toolkit built over years of production mobile
@@ -1838,8 +2387,10 @@
             <span>Flutter</span><span>Dart</span><span>Firebase</span><span>Bloc</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1862,8 +2413,10 @@
             <span>Flutter</span><span>Firebase</span><span>Real-time Chat</span><span>Dio</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1885,8 +2438,10 @@
             <span>Flutter</span><span>Offline-first</span><span>Drift</span><span>Bloc</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1908,8 +2463,10 @@
             <span>Flutter</span><span>Isar</span><span>Bloc</span><span>Offline-first</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1932,8 +2489,10 @@
             <span>Flutter</span><span>FCM</span><span>Firebase</span><span>Bloc</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1955,8 +2514,10 @@
             <span>Flutter</span><span>Dio</span><span>Drift</span><span>Analytics</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -1978,8 +2539,10 @@
             <span>Flutter</span><span>Forms</span><span>Dio</span><span>Bloc</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -2002,8 +2565,10 @@
             <span>Flutter</span><span>QR Scanner</span><span>Firebase</span><span>Bloc</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -2023,8 +2588,10 @@
             <span>Flutter</span><span>Dart</span>
           </div>
           <div class="project-actions">
-            <button class="btn btn-outline" onclick="alert('Details coming soon')">Details</button>
-            <button class="btn btn-ghost" onclick="alert('Demo coming soon')">Demo</button>
+            <button class="btn btn-outline magnetic-btn" onclick="alert('Details coming soon')"><span
+                class="btn-inner">Details</span></button>
+            <button class="btn btn-ghost magnetic-btn" onclick="alert('Demo coming soon')"><span
+                class="btn-inner">Demo</span></button>
           </div>
         </div>
       </div>
@@ -2043,9 +2610,9 @@
         <div class="timeline-node"></div>
         <div class="timeline-card glass">
           <div class="timeline-company">Cannopy Technologies Company</div>
-          <div class="timeline-role">Flutter Developer</div>
+          <div class="timeline-role">Senior Flutter Developer</div>
           <div class="timeline-duration">Sep 2025 — Present</div>
-          <p class="timeline-desc">Currently working as a Flutter Developer, focusing on business applications,
+          <p class="timeline-desc">Currently working as a Senior Flutter Developer, focusing on business applications,
             distribution systems, POS systems, offline-first apps, scalable Flutter architecture, and production-level
             mobile development.</p>
         </div>
@@ -2079,12 +2646,12 @@
         <div class="edu-status">Currently Enrolled</div>
       </div>
 
-      <!-- <div class="edu-card glass reveal reveal-delay-1">
+      <div class="edu-card glass reveal reveal-delay-1" style="display:none;">
         <div class="edu-icon">&#127979;</div>
         <div class="edu-name">West Yangon University</div>
         <div class="edu-major">Undergraduate Studies</div>
         <div class="edu-status">Completed</div>
-      </div> -->
+      </div>
     </div>
   </section>
 
@@ -2098,7 +2665,7 @@
       applications.</p>
 
     <div class="arch-layers">
-      <div class="arch-layer glass reveal">
+      <div class="arch-layer glass reveal" onclick="this.classList.toggle('expanded')">
         <div class="arch-layer-label">Layer 01</div>
         <div class="arch-layer-title">Presentation Layer</div>
         <div class="arch-layer-items">
@@ -2108,7 +2675,7 @@
         </div>
       </div>
 
-      <div class="arch-layer glass reveal reveal-delay-1">
+      <div class="arch-layer glass reveal reveal-delay-1" onclick="this.classList.toggle('expanded')">
         <div class="arch-layer-label">Layer 02</div>
         <div class="arch-layer-title">Business Logic Layer</div>
         <div class="arch-layer-items">
@@ -2118,7 +2685,7 @@
         </div>
       </div>
 
-      <div class="arch-layer glass reveal reveal-delay-2">
+      <div class="arch-layer glass reveal reveal-delay-2" onclick="this.classList.toggle('expanded')">
         <div class="arch-layer-label">Layer 03</div>
         <div class="arch-layer-title">Data Layer</div>
         <div class="arch-layer-items">
@@ -2128,7 +2695,7 @@
         </div>
       </div>
 
-      <div class="arch-layer glass reveal reveal-delay-3">
+      <div class="arch-layer glass reveal reveal-delay-3" onclick="this.classList.toggle('expanded')">
         <div class="arch-layer-label">Integrations</div>
         <div class="arch-layer-title">Services & Infrastructure</div>
         <div class="arch-layer-items">
@@ -2227,8 +2794,10 @@
           </div>
         </div>
         <div class="contact-actions">
-          <button class="btn btn-outline" onclick="copyEmail()">Copy Email</button>
-          <button class="btn btn-ghost" onclick="alert('Resume download coming soon')">Download Resume</button>
+          <button class="btn btn-outline magnetic-btn" onclick="copyEmail()"><span class="btn-inner">Copy
+              Email</span></button>
+          <button class="btn btn-ghost magnetic-btn" onclick="alert('Resume download coming soon')"><span
+              class="btn-inner">Download Resume</span></button>
         </div>
       </div>
 
@@ -2249,7 +2818,7 @@
           <label for="message">Message</label>
           <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Send Message</button>
+        <button type="submit" class="btn btn-primary magnetic-btn"><span class="btn-inner">Send Message</span></button>
       </form>
     </div>
   </section>
@@ -2257,16 +2826,77 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-brand">Zin Min Htike</div>
-    <p class="footer-text">&copy; 2026 Zin Min Htike. Flutter Developer. Built with passion, clean architecture,
-      and modern mobile engineering.</p>
+    <p class="footer-text">&copy; 2026 Zin Min Htike. Flutter Developer. Built with passion, clean architecture, and
+      modern mobile engineering.</p>
   </footer>
 
   <script>
+    // ===== CUSTOM CURSOR =====
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+    let cursorX = 0, cursorY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+      cursorDot.style.left = cursorX + 'px';
+      cursorDot.style.top = cursorY + 'px';
+    });
+
+    function animateCursorRing() {
+      ringX += (cursorX - ringX) * 0.15;
+      ringY += (cursorY - ringY) * 0.15;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+      requestAnimationFrame(animateCursorRing);
+    }
+    animateCursorRing();
+
+    // Hover state for interactive elements
+    const hoverTargets = 'a, button, .btn, .project-card, .skill-node, .tech-badge, .stat-card, .edu-card, .contact-item, .arch-layer, input, textarea';
+    document.querySelectorAll(hoverTargets).forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorDot.classList.add('hovering');
+        cursorRing.classList.add('hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorDot.classList.remove('hovering');
+        cursorRing.classList.remove('hovering');
+      });
+    });
+
+    // ===== SCROLL PROGRESS =====
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+      scrollProgress.style.transform = `scaleX(${progress})`;
+    });
+
+    // ===== CLICK PARTICLE BURST =====
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'click-particle';
+        const angle = (Math.PI * 2 * i) / 8;
+        const distance = 30 + Math.random() * 40;
+        particle.style.left = e.clientX + 'px';
+        particle.style.top = e.clientY + 'px';
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+        particle.style.background = i % 2 === 0 ? 'var(--red)' : 'var(--blue)';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 600);
+      }
+    });
+
     // ===== LOADING SCREEN =====
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('loader').classList.add('hidden');
-      }, 1200);
+      }, 1400);
     });
 
     // ===== NAVIGATION =====
@@ -2282,7 +2912,6 @@
       navLinks.classList.toggle('open');
     });
 
-    // Close mobile nav on link click
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => navLinks.classList.remove('open'));
     });
@@ -2298,11 +2927,53 @@
 
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+    // ===== ANIMATED COUNTERS =====
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.dataset.animated = 'true';
+          const el = entry.target;
+          const target = parseFloat(el.dataset.count);
+          if (isNaN(target)) return;
+          const suffix = el.dataset.suffix || '';
+          const duration = 1500;
+          const start = performance.now();
+
+          function updateCounter(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = target * eased;
+            el.textContent = (target % 1 !== 0 ? current.toFixed(1) : Math.floor(current)) + suffix;
+            if (progress < 1) requestAnimationFrame(updateCounter);
+          }
+          requestAnimationFrame(updateCounter);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+    // ===== TYPING ANIMATION =====
+    const heroTitle = document.getElementById('heroTitle');
+    const typingText = 'Building scalable, offline-first, production-ready mobile applications with Flutter.';
+    let charIndex = 0;
+
+    function typeWriter() {
+      if (charIndex < typingText.length) {
+        heroTitle.textContent += typingText.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 25 + Math.random() * 20);
+      }
+    }
+
+    // Start typing after loader hides
+    setTimeout(typeWriter, 1600);
+
     // ===== SPIDER-WEB BACKGROUND =====
     const webCanvas = document.getElementById('web-canvas');
     const webCtx = webCanvas.getContext('2d');
     let webNodes = [];
-    let webConnections = [];
 
     function resizeWebCanvas() {
       webCanvas.width = window.innerWidth;
@@ -2327,7 +2998,6 @@
     function drawWeb() {
       webCtx.clearRect(0, 0, webCanvas.width, webCanvas.height);
 
-      // Update positions
       webNodes.forEach(node => {
         node.x += node.vx;
         node.y += node.vy;
@@ -2335,7 +3005,6 @@
         if (node.y < 0 || node.y > webCanvas.height) node.vy *= -1;
       });
 
-      // Draw connections
       const maxDist = 150;
       for (let i = 0; i < webNodes.length; i++) {
         for (let j = i + 1; j < webNodes.length; j++) {
@@ -2354,7 +3023,6 @@
         }
       }
 
-      // Draw nodes
       webNodes.forEach(node => {
         webCtx.beginPath();
         webCtx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
@@ -2369,11 +3037,58 @@
     resizeWebCanvas();
     drawWeb();
 
+    // ===== FLOATING PARTICLES =====
+    const particleCanvas = document.getElementById('particle-canvas');
+    const pCtx = particleCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeParticleCanvas() {
+      particleCanvas.width = window.innerWidth;
+      particleCanvas.height = window.innerHeight;
+      initParticles();
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.floor(particleCanvas.width * particleCanvas.height / 40000);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * particleCanvas.width,
+          y: Math.random() * particleCanvas.height,
+          size: Math.random() * 2 + 0.5,
+          speedY: -(Math.random() * 0.3 + 0.1),
+          speedX: (Math.random() - 0.5) * 0.2,
+          opacity: Math.random() * 0.4 + 0.1,
+          color: Math.random() > 0.5 ? '220, 40, 40' : '40, 100, 220'
+        });
+      }
+    }
+
+    function drawParticles() {
+      pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      particles.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        if (p.y < -10) { p.y = particleCanvas.height + 10; p.x = Math.random() * particleCanvas.width; }
+        if (p.x < -10) p.x = particleCanvas.width + 10;
+        if (p.x > particleCanvas.width + 10) p.x = -10;
+
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(${p.color}, ${p.opacity})`;
+        pCtx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', resizeParticleCanvas);
+    resizeParticleCanvas();
+    drawParticles();
+
     // ===== CURSOR TRAIL =====
     const cursorCanvas = document.getElementById('cursor-canvas');
     const cursorCtx = cursorCanvas.getContext('2d');
     let cursorTrail = [];
-    let mouseX = 0, mouseY = 0;
 
     function resizeCursorCanvas() {
       cursorCanvas.width = window.innerWidth;
@@ -2381,28 +3096,24 @@
     }
 
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursorTrail.push({ x: mouseX, y: mouseY, life: 1 });
+      cursorTrail.push({ x: e.clientX, y: e.clientY, life: 1 });
       if (cursorTrail.length > 30) cursorTrail.shift();
     });
 
     function drawCursorTrail() {
       cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-
-      cursorTrail.forEach((point, i) => {
+      cursorTrail.forEach(point => {
         point.life -= 0.03;
         if (point.life > 0) {
           cursorCtx.beginPath();
           cursorCtx.arc(point.x, point.y, point.life * 4, 0, Math.PI * 2);
           const gradient = cursorCtx.createRadialGradient(point.x, point.y, 0, point.x, point.y, point.life * 4);
           gradient.addColorStop(0, `rgba(220, 40, 40, ${point.life * 0.4})`);
-          gradient.addColorStop(1, `rgba(40, 100, 220, 0)`);
+          gradient.addColorStop(1, 'rgba(40, 100, 220, 0)');
           cursorCtx.fillStyle = gradient;
           cursorCtx.fill();
         }
       });
-
       cursorTrail = cursorTrail.filter(p => p.life > 0);
       requestAnimationFrame(drawCursorTrail);
     }
@@ -2410,6 +3121,24 @@
     window.addEventListener('resize', resizeCursorCanvas);
     resizeCursorCanvas();
     drawCursorTrail();
+
+    // ===== MAGNETIC BUTTONS =====
+    document.querySelectorAll('.magnetic-btn').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const inner = btn.querySelector('.btn-inner');
+        if (inner) {
+          inner.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+        }
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        const inner = btn.querySelector('.btn-inner');
+        if (inner) inner.style.transform = 'translate(0, 0)';
+      });
+    });
 
     // ===== 3D TILT ON PROJECT CARDS =====
     document.querySelectorAll('.project-card').forEach(card => {
@@ -2429,13 +3158,32 @@
       });
     });
 
+    // ===== 3D TILT ON EDUCATION CARDS =====
+    document.querySelectorAll('.edu-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 25;
+        const rotateY = (centerX - x) / 25;
+        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
+      });
+    });
+
     // ===== COPY EMAIL =====
     function copyEmail() {
       navigator.clipboard.writeText('zmh1.sabahna@gmail.com').then(() => {
-        const btn = event.target;
-        const original = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = original, 2000);
+        const btn = event.target.closest('.btn');
+        const inner = btn.querySelector('.btn-inner');
+        const original = inner.textContent;
+        inner.textContent = 'Copied!';
+        setTimeout(() => inner.textContent = original, 2000);
       });
     }
 
@@ -2443,17 +3191,18 @@
     function handleSubmit(e) {
       e.preventDefault();
       const btn = e.target.querySelector('button[type="submit"]');
-      const original = btn.textContent;
-      btn.textContent = 'Message Sent!';
+      const inner = btn.querySelector('.btn-inner');
+      const original = inner.textContent;
+      inner.textContent = 'Message Sent!';
       btn.style.background = 'oklch(58% 0.16 145)';
       setTimeout(() => {
-        btn.textContent = original;
+        inner.textContent = original;
         btn.style.background = '';
         e.target.reset();
       }, 3000);
     }
 
-    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+    // ===== SMOOTH SCROLL =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -2463,6 +3212,304 @@
         }
       });
     });
+
+    // ===== PARALLAX ON HERO =====
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const heroOrbs = document.querySelectorAll('.hero-orb');
+      heroOrbs.forEach((orb, i) => {
+        orb.style.transform = `translateY(${scrollY * (0.1 + i * 0.05)}px)`;
+      });
+    });
+
+    // ===== INTERACTIVE PHONE MOCKUP =====
+    const phoneMockup = document.getElementById('phoneMockup');
+    const phoneGlow = document.getElementById('phoneGlow');
+    const heroVisual = document.querySelector('.hero-visual');
+    const phoneWebCanvas = document.getElementById('phone-web-canvas');
+    const phoneWebCtx = phoneWebCanvas.getContext('2d');
+
+    function resizePhoneWebCanvas() {
+      const wrapper = document.querySelector('.phone-mockup-wrapper');
+      if (!wrapper) return;
+      phoneWebCanvas.width = wrapper.offsetWidth;
+      phoneWebCanvas.height = wrapper.offsetHeight;
+    }
+    resizePhoneWebCanvas();
+    window.addEventListener('resize', resizePhoneWebCanvas);
+
+    let phoneRect = null;
+    let heroMouseX = 0, heroMouseY = 0;
+    let phoneTargetRotX = 0, phoneTargetRotY = 0;
+    let phoneCurrentRotX = 0, phoneCurrentRotY = 0;
+    let phoneTargetX = 0, phoneTargetY = 0;
+    let phoneCurrentX = 0, phoneCurrentY = 0;
+    let isPhoneFlipped = false;
+    const screens = ['screenDefault', 'screenStats', 'screenCode'];
+
+    phoneMockup.addEventListener('click', () => {
+      isPhoneFlipped = !isPhoneFlipped;
+      phoneMockup.classList.toggle('flipped', isPhoneFlipped);
+    });
+
+    if (heroVisual) {
+      heroVisual.addEventListener('mousemove', (e) => {
+        phoneRect = heroVisual.getBoundingClientRect();
+        heroMouseX = e.clientX - phoneRect.left;
+        heroMouseY = e.clientY - phoneRect.top;
+
+        const centerX = phoneRect.width / 2;
+        const centerY = phoneRect.height / 2;
+        const normX = (heroMouseX - centerX) / centerX;
+        const normY = (heroMouseY - centerY) / centerY;
+
+        phoneTargetRotX = normY * -8;
+        phoneTargetRotY = normX * 8;
+        phoneTargetX = normX * 12;
+        phoneTargetY = normY * 8;
+
+        if (phoneGlow) {
+          phoneGlow.style.left = (heroMouseX - 150) + 'px';
+          phoneGlow.style.top = (heroMouseY - 150) + 'px';
+          phoneGlow.style.opacity = '1';
+        }
+
+        updateBadgeProximity(e.clientX, e.clientY);
+      });
+
+      heroVisual.addEventListener('mouseleave', () => {
+        phoneTargetRotX = 0;
+        phoneTargetRotY = 0;
+        phoneTargetX = 0;
+        phoneTargetY = 0;
+        if (phoneGlow) phoneGlow.style.opacity = '0.6';
+        resetBadges();
+      });
+    }
+
+    function animatePhone() {
+      const ease = 0.08;
+      phoneCurrentRotX += (phoneTargetRotX - phoneCurrentRotX) * ease;
+      phoneCurrentRotY += (phoneTargetRotY - phoneCurrentRotY) * ease;
+      phoneCurrentX += (phoneTargetX - phoneCurrentX) * ease;
+      phoneCurrentY += (phoneTargetY - phoneCurrentY) * ease;
+
+      const time = Date.now() * 0.001;
+      const idleY = Math.sin(time * 0.8) * 4;
+      const idleRot = Math.sin(time * 0.5) * 1;
+
+      if (!isPhoneFlipped) {
+        phoneMockup.style.transform = `translate(${phoneCurrentX}px, ${phoneCurrentY + idleY}px) rotateX(${phoneCurrentRotX + idleRot}deg) rotateY(${phoneCurrentRotY}deg)`;
+      }
+
+      drawPhoneWebLines();
+      requestAnimationFrame(animatePhone);
+    }
+
+    function drawPhoneWebLines() {
+      if (!phoneRect) return;
+      phoneWebCtx.clearRect(0, 0, phoneWebCanvas.width, phoneWebCanvas.height);
+
+      const phoneEl = phoneMockup;
+      const pRect = phoneEl.getBoundingClientRect();
+      const wRect = phoneWebCanvas.parentElement.getBoundingClientRect();
+
+      const cx = pRect.left - wRect.left + pRect.width / 2;
+      const cy = pRect.top - wRect.top + pRect.height / 2;
+      const mx = heroMouseX;
+      const my = heroMouseY;
+
+      const corners = [
+        { x: pRect.left - wRect.left, y: pRect.top - wRect.top },
+        { x: pRect.right - wRect.left, y: pRect.top - wRect.top },
+        { x: pRect.left - wRect.left, y: pRect.bottom - wRect.top },
+        { x: pRect.right - wRect.left, y: pRect.bottom - wRect.top },
+      ];
+
+      const edgePoints = [
+        { x: 0, y: 0 },
+        { x: phoneWebCanvas.width, y: 0 },
+        { x: 0, y: phoneWebCanvas.height },
+        { x: phoneWebCanvas.width, y: phoneWebCanvas.height },
+        { x: phoneWebCanvas.width / 2, y: 0 },
+        { x: phoneWebCanvas.width / 2, y: phoneWebCanvas.height },
+        { x: 0, y: phoneWebCanvas.height / 2 },
+        { x: phoneWebCanvas.width, y: phoneWebCanvas.height / 2 },
+      ];
+
+      const time = Date.now() * 0.001;
+
+      corners.forEach((corner, i) => {
+        const target = edgePoints[i % edgePoints.length];
+        const dist = Math.sqrt((mx - corner.x) ** 2 + (my - corner.y) ** 2);
+        const proximity = Math.max(0, 1 - dist / 400);
+
+        phoneWebCtx.beginPath();
+        phoneWebCtx.moveTo(corner.x, corner.y);
+        const midX = (corner.x + target.x) / 2 + (mx - cx) * 0.1;
+        const midY = (corner.y + target.y) / 2 + (my - cy) * 0.1;
+        phoneWebCtx.quadraticCurveTo(midX, midY, target.x, target.y);
+
+        const alpha = 0.08 + proximity * 0.15;
+        const isRed = i % 2 === 0;
+        phoneWebCtx.strokeStyle = isRed ? `rgba(220, 40, 40, ${alpha})` : `rgba(40, 100, 220, ${alpha})`;
+        phoneWebCtx.lineWidth = 0.8 + proximity * 0.8;
+        phoneWebCtx.stroke();
+
+        phoneWebCtx.beginPath();
+        phoneWebCtx.arc(corner.x, corner.y, 2 + proximity * 2, 0, Math.PI * 2);
+        phoneWebCtx.fillStyle = isRed ? `rgba(220, 40, 40, ${0.3 + proximity * 0.4})` : `rgba(40, 100, 220, ${0.3 + proximity * 0.4})`;
+        phoneWebCtx.fill();
+      });
+
+      const mouseDist = Math.sqrt((mx - cx) ** 2 + (my - cy) ** 2);
+      if (mouseDist < 300) {
+        const alpha = (1 - mouseDist / 300) * 0.3;
+        phoneWebCtx.beginPath();
+        phoneWebCtx.moveTo(cx, cy);
+        phoneWebCtx.lineTo(mx, my);
+        phoneWebCtx.strokeStyle = `rgba(220, 40, 40, ${alpha})`;
+        phoneWebCtx.lineWidth = 1;
+        phoneWebCtx.setLineDash([4, 4]);
+        phoneWebCtx.lineDashOffset = -time * 20;
+        phoneWebCtx.stroke();
+        phoneWebCtx.setLineDash([]);
+
+        phoneWebCtx.beginPath();
+        phoneWebCtx.arc(mx, my, 4, 0, Math.PI * 2);
+        phoneWebCtx.fillStyle = `rgba(220, 40, 40, ${alpha})`;
+        phoneWebCtx.fill();
+      }
+    }
+
+    function updateBadgeProximity(mouseX, mouseY) {
+      document.querySelectorAll('.tech-badge').forEach(badge => {
+        const bRect = badge.getBoundingClientRect();
+        const bx = bRect.left + bRect.width / 2;
+        const by = bRect.top + bRect.height / 2;
+        const dist = Math.sqrt((mouseX - bx) ** 2 + (mouseY - by) ** 2);
+
+        if (dist < 120) {
+          badge.classList.add('glowing');
+          const push = (120 - dist) / 120;
+          const angle = Math.atan2(by - mouseY, bx - mouseX);
+          badge.style.transform = `translate(${Math.cos(angle) * push * 8}px, ${Math.sin(angle) * push * 8}px) scale(${1 + push * 0.05})`;
+        } else {
+          badge.classList.remove('glowing');
+          badge.style.transform = '';
+        }
+      });
+    }
+
+    function resetBadges() {
+      document.querySelectorAll('.tech-badge').forEach(badge => {
+        badge.classList.remove('glowing');
+        badge.style.transform = '';
+      });
+    }
+
+    let screenHoverTimer = null;
+    phoneMockup.addEventListener('mouseenter', () => {
+      showScreen(screens[0]);
+      screenHoverTimer = setInterval(() => {
+        const idx = screens.indexOf(document.querySelector('.phone-screen-content:not(.hidden)')?.id || 'screenDefault');
+        showScreen(screens[(idx + 1) % screens.length]);
+      }, 2500);
+    });
+
+    phoneMockup.addEventListener('mouseleave', () => {
+      clearInterval(screenHoverTimer);
+      showScreen('screenDefault');
+    });
+
+    function showScreen(id) {
+      screens.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.classList.toggle('hidden', s !== id);
+      });
+    }
+
+    // ===== SKILLS WEB CANVAS =====
+    const skillsCanvas = document.getElementById('skills-web-canvas');
+    if (skillsCanvas) {
+      const sCtx = skillsCanvas.getContext('2d');
+      let skillParticles = [];
+
+      function resizeSkillsCanvas() {
+        const section = document.getElementById('skills');
+        if (!section) return;
+        skillsCanvas.width = section.offsetWidth;
+        skillsCanvas.height = section.offsetHeight;
+        skillParticles = [];
+        for (let i = 0; i < 40; i++) {
+          skillParticles.push({
+            x: Math.random() * skillsCanvas.width,
+            y: Math.random() * skillsCanvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 1,
+            color: Math.random() > 0.5 ? '220, 40, 40' : '40, 100, 220'
+          });
+        }
+      }
+
+      function drawSkillsWeb() {
+        sCtx.clearRect(0, 0, skillsCanvas.width, skillsCanvas.height);
+        skillParticles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > skillsCanvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > skillsCanvas.height) p.vy *= -1;
+        });
+
+        for (let i = 0; i < skillParticles.length; i++) {
+          for (let j = i + 1; j < skillParticles.length; j++) {
+            const dx = skillParticles[i].x - skillParticles[j].x;
+            const dy = skillParticles[i].y - skillParticles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              sCtx.beginPath();
+              sCtx.moveTo(skillParticles[i].x, skillParticles[i].y);
+              sCtx.lineTo(skillParticles[j].x, skillParticles[j].y);
+              sCtx.strokeStyle = `rgba(${skillParticles[i].color}, ${(1 - dist / 100) * 0.1})`;
+              sCtx.lineWidth = 0.5;
+              sCtx.stroke();
+            }
+          }
+        }
+
+        skillParticles.forEach(p => {
+          sCtx.beginPath();
+          sCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          sCtx.fillStyle = `rgba(${p.color}, 0.3)`;
+          sCtx.fill();
+        });
+
+        requestAnimationFrame(drawSkillsWeb);
+      }
+
+      window.addEventListener('resize', resizeSkillsCanvas);
+      setTimeout(() => { resizeSkillsCanvas(); drawSkillsWeb(); }, 500);
+    }
+
+    // ===== FLOATING ICONS 3D INTERACTION =====
+    document.querySelectorAll('.floating-icon').forEach(icon => {
+      icon.addEventListener('mousemove', (e) => {
+        const rect = icon.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        icon.style.transform = `perspective(400px) rotateY(${x * 0.3}deg) rotateX(${-y * 0.3}deg) scale(1.15)`;
+        icon.style.boxShadow = '0 0 24px rgba(220, 40, 40, 0.4)';
+      });
+
+      icon.addEventListener('mouseleave', () => {
+        icon.style.transform = '';
+        icon.style.boxShadow = '';
+      });
+    });
+
+    // Start phone animation
+    animatePhone();
   </script>
 </body>
 
