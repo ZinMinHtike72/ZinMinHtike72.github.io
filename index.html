@@ -1964,47 +1964,188 @@
     .contact-info {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
     }
 
     .contact-item {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 20px;
-      border-radius: var(--radius-md);
+      gap: 20px;
+      padding: 20px 24px;
+      border-radius: var(--radius-lg);
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.04);
       transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    .contact-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(220, 40, 40, 0.08) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .contact-item:hover::before {
+      opacity: 1;
     }
 
     .contact-item:hover {
-      border-color: var(--red);
-      box-shadow: 0 0 16px rgba(220, 40, 40, 0.1);
-      transform: translateX(4px);
+      border-color: rgba(220, 40, 40, 0.3);
+      box-shadow: 0 0 24px rgba(220, 40, 40, 0.08), 0 8px 32px rgba(0, 0, 0, 0.2);
+      transform: translateX(6px);
     }
 
-    .contact-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-sm);
-      background: var(--gradient-hero);
+    /* 3D Contact Icon Container */
+    .contact-icon-3d {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      position: relative;
+      perspective: 400px;
+      transform-style: preserve-3d;
+    }
+
+    .contact-icon-3d-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .contact-item:hover .contact-icon-3d-inner {
+      transform: rotateY(180deg) rotateX(10deg);
+    }
+
+    .contact-icon-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-      transition: transform 0.4s ease;
     }
 
-    .contact-item:hover .contact-icon {
+    .contact-icon-front {
+      background: linear-gradient(135deg, rgba(220, 40, 40, 0.2), rgba(40, 100, 220, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-icon-back {
+      background: var(--gradient-hero);
       transform: rotateY(180deg);
+      box-shadow: 0 4px 20px rgba(220, 40, 40, 0.3);
+    }
+
+    .contact-icon-back svg {
+      filter: brightness(0) invert(1);
+    }
+
+    .contact-icon-3d svg {
+      width: 26px;
+      height: 26px;
+      transition: filter 0.3s ease;
+    }
+
+    .contact-icon-front svg {
+      filter: drop-shadow(0 0 6px rgba(220, 40, 40, 0.3));
+    }
+
+    /* Icon glow ring */
+    .contact-icon-glow {
+      position: absolute;
+      inset: -4px;
+      border-radius: 18px;
+      border: 1px solid transparent;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      pointer-events: none;
+    }
+
+    .contact-item:hover .contact-icon-glow {
+      border-color: rgba(220, 40, 40, 0.2);
+      box-shadow: 0 0 16px rgba(220, 40, 40, 0.15);
+    }
+
+    /* Floating particles around icon */
+    .contact-icon-particles {
+      position: absolute;
+      inset: -12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .contact-item:hover .contact-icon-particles {
+      opacity: 1;
+    }
+
+    .contact-icon-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      animation: particleOrbit 2s ease-in-out infinite;
+    }
+
+    .contact-icon-particle:nth-child(1) {
+      top: 0;
+      left: 50%;
+      background: var(--red);
+      animation-delay: 0s;
+    }
+
+    .contact-icon-particle:nth-child(2) {
+      top: 50%;
+      right: 0;
+      background: var(--blue);
+      animation-delay: 0.5s;
+    }
+
+    .contact-icon-particle:nth-child(3) {
+      bottom: 0;
+      left: 50%;
+      background: var(--red);
+      animation-delay: 1s;
+    }
+
+    .contact-icon-particle:nth-child(4) {
+      top: 50%;
+      left: 0;
+      background: var(--blue);
+      animation-delay: 1.5s;
+    }
+
+    @keyframes particleOrbit {
+
+      0%,
+      100% {
+        transform: scale(1) translate(0, 0);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: scale(1.5) translate(var(--px, 4px), var(--py, -4px));
+        opacity: 1;
+      }
     }
 
     .contact-label {
       font-size: 13px;
       color: var(--fg-muted);
       margin-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+
+    .contact-item:hover .contact-label {
+      color: var(--fg);
     }
 
     .contact-value {
@@ -3324,36 +3465,166 @@
 
     <div class="contact-grid">
       <div class="contact-info reveal reveal-delay-3">
+        <!-- Email -->
         <div class="contact-item">
-          <div class="contact-icon">&#9993;</div>
+          <div class="contact-icon-3d">
+            <div class="contact-icon-3d-inner">
+              <div class="contact-icon-face contact-icon-front">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#emailGrad)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="emailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="oklch(55% 0.22 25)" />
+                      <stop offset="100%" stop-color="oklch(60% 0.20 250)" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="2" y="4" width="20" height="16" rx="3" />
+                  <path d="M2 7l10 6 10-6" />
+                </svg>
+              </div>
+              <div class="contact-icon-face contact-icon-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+              </div>
+            </div>
+            <div class="contact-icon-glow"></div>
+            <div class="contact-icon-particles">
+              <div class="contact-icon-particle" style="--px:6px;--py:-6px"></div>
+              <div class="contact-icon-particle" style="--px:-6px;--py:-4px"></div>
+              <div class="contact-icon-particle" style="--px:4px;--py:6px"></div>
+              <div class="contact-icon-particle" style="--px:-4px;--py:4px"></div>
+            </div>
+          </div>
           <div>
             <div class="contact-label">Email</div>
             <div class="contact-value"><a href="mailto:zmh1.sabahna@gmail.com">zmh1.sabahna@gmail.com</a></div>
           </div>
         </div>
+
+        <!-- Phone -->
         <div class="contact-item">
-          <div class="contact-icon">&#128222;</div>
+          <div class="contact-icon-3d">
+            <div class="contact-icon-3d-inner">
+              <div class="contact-icon-face contact-icon-front">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#phoneGrad)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="phoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="oklch(55% 0.22 25)" />
+                      <stop offset="100%" stop-color="oklch(60% 0.20 250)" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                </svg>
+              </div>
+              <div class="contact-icon-face contact-icon-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                </svg>
+              </div>
+            </div>
+            <div class="contact-icon-glow"></div>
+            <div class="contact-icon-particles">
+              <div class="contact-icon-particle" style="--px:5px;--py:-5px"></div>
+              <div class="contact-icon-particle" style="--px:-5px;--py:-5px"></div>
+              <div class="contact-icon-particle" style="--px:5px;--py:5px"></div>
+              <div class="contact-icon-particle" style="--px:-5px;--py:5px"></div>
+            </div>
+          </div>
           <div>
             <div class="contact-label">Phone</div>
             <div class="contact-value"><a href="tel:+959780136579">+95 9 780 136 579</a></div>
           </div>
         </div>
+
+        <!-- LinkedIn -->
         <div class="contact-item">
-          <div class="contact-icon">&#128188;</div>
+          <div class="contact-icon-3d">
+            <div class="contact-icon-3d-inner">
+              <div class="contact-icon-face contact-icon-front">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#linkedGrad)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="linkedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="oklch(55% 0.22 25)" />
+                      <stop offset="100%" stop-color="oklch(60% 0.20 250)" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+              </div>
+              <div class="contact-icon-face contact-icon-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+              </div>
+            </div>
+            <div class="contact-icon-glow"></div>
+            <div class="contact-icon-particles">
+              <div class="contact-icon-particle" style="--px:6px;--py:-4px"></div>
+              <div class="contact-icon-particle" style="--px:-4px;--py:-6px"></div>
+              <div class="contact-icon-particle" style="--px:4px;--py:6px"></div>
+              <div class="contact-icon-particle" style="--px:-6px;--py:4px"></div>
+            </div>
+          </div>
           <div>
             <div class="contact-label">LinkedIn</div>
             <div class="contact-value"><a href="https://www.linkedin.com/in/zin-min-htike-385501260/" target="_blank"
                 rel="noopener">linkedin.com/in/zin-min-htike</a></div>
           </div>
         </div>
+
+        <!-- GitHub -->
         <div class="contact-item">
-          <div class="contact-icon">&#128187;</div>
+          <div class="contact-icon-3d">
+            <div class="contact-icon-3d-inner">
+              <div class="contact-icon-face contact-icon-front">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#githubGrad)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="githubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="oklch(55% 0.22 25)" />
+                      <stop offset="100%" stop-color="oklch(60% 0.20 250)" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                </svg>
+              </div>
+              <div class="contact-icon-face contact-icon-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                </svg>
+              </div>
+            </div>
+            <div class="contact-icon-glow"></div>
+            <div class="contact-icon-particles">
+              <div class="contact-icon-particle" style="--px:5px;--py:-6px"></div>
+              <div class="contact-icon-particle" style="--px:-6px;--py:-5px"></div>
+              <div class="contact-icon-particle" style="--px:6px;--py:5px"></div>
+              <div class="contact-icon-particle" style="--px:-5px;--py:6px"></div>
+            </div>
+          </div>
           <div>
             <div class="contact-label">GitHub</div>
             <div class="contact-value"><a href="https://github.com/ZinMinHtike72" target="_blank"
                 rel="noopener">github.com/ZinMinHtike72</a></div>
           </div>
         </div>
+
         <div class="contact-actions">
           <button class="btn btn-outline magnetic-btn" onclick="copyEmail()"><span class="btn-inner">Copy
               Email</span></button>
@@ -3771,6 +4042,17 @@
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+      });
+    });
+
+    // ===== CONTACT ITEM SPOTLIGHT =====
+    document.querySelectorAll('.contact-item').forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        item.style.setProperty('--mx', x + '%');
+        item.style.setProperty('--my', y + '%');
       });
     });
 
